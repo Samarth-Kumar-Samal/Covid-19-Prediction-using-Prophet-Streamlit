@@ -72,65 +72,57 @@ st.subheader('World Covid Cases with respect to time')
 st.markdown("<br>", unsafe_allow_html=True)
 
 # Create an expander for the choropleth map of Confirmed Cases
-with st.expander("Confirmed Cases with respect to Time"):
-    # Create choropleth map
-    fig = px.choropleth(
-        df,
-        locations='Country',
-        locationmode='country names',
-        color='Confirmed',
-        animation_frame='Date',
-        color_continuous_scale='RdBu',
+st.write("### Confirmed Cases with respect to Time")
+# Create choropleth map
+fig = px.choropleth(df,
+                    locations='Country',
+                    locationmode='country names',
+                    color='Confirmed',
+                    animation_frame='Date',
+                    color_continuous_scale='RdBu',
+                    )
+# Update layout
+fig.update_layout(
+    title='Choropleth Map for the total number of Confirmed Covid-19 Cases around the world'
     )
-    # Update layout
-    fig.update_layout(
-        title='Choropleth Map for the total number of Confirmed Covid-19 Cases around the world'
-    )
-    fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 0.1
-    # Show the map using Streamlit
-    st.plotly_chart(fig)
+fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 0.1
+# Show the map using Streamlit
+st.plotly_chart(fig)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Create an expander for the choropleth map of Recovered Cases
-with st.expander("Recovered Cases with respect to Time"):
-    # Create choropleth map
-    fig = px.choropleth(
-        df,
-        locations='Country',
-        locationmode='country names',
-        color='Recovered',
-        animation_frame='Date',
-        color_continuous_scale='BuPu',
-    )
-    # Update layout
-    fig.update_layout(
-        title='Choropleth Map for the total number of Recovered Covid-19 Cases around the world'
-    )
-    fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 0.1
-    # Show the map using Streamlit
-    st.plotly_chart(fig)
+# Create choropleth map for Recovered Cases
+st.write("### Recovered Cases with respect to Time")
+fig_recovered = px.choropleth(
+    df,
+    locations='Country',
+    locationmode='country names',
+    color='Recovered',
+    animation_frame='Date',
+    color_continuous_scale='BuPu',
+)
+fig_recovered.update_layout(
+    title='Choropleth Map for the total number of Recovered Covid-19 Cases around the world'
+)
+fig_recovered.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 0.1
+st.plotly_chart(fig_recovered)
 
+# Create choropleth map for Death Cases
 st.markdown("<br>", unsafe_allow_html=True)
-
-# Create an expander for the choropleth map of Recovered Cases
-with st.expander("Death Cases with respect to Time"):
-    # Create choropleth map
-    fig = px.choropleth(
-        df,
-        locations='Country',
-        locationmode='country names',
-        color='Deaths',
-        animation_frame='Date',
-        color_continuous_scale='magma',
-    )
-    # Update layout
-    fig.update_layout(
-        title='Choropleth Map for the total number of Death Covid-19 Cases around the world'
-    )
-    fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 0.1
-    # Show the map using Streamlit
-    st.plotly_chart(fig)
+st.write("### Death Cases with respect to Time")
+fig_deaths = px.choropleth(
+    df,
+    locations='Country',
+    locationmode='country names',
+    color='Deaths',
+    animation_frame='Date',
+    color_continuous_scale='magma',
+)
+fig_deaths.update_layout(
+    title='Choropleth Map for the total number of Death Covid-19 Cases around the world'
+)
+fig_deaths.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 0.1
+st.plotly_chart(fig_deaths)
 
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -139,99 +131,108 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-st.subheader('Top 5 countries for Confirmed,Deaths and Recovered Covid-19 cases')
+st.subheader('Top 5 countries for Confirmed, Deaths, and Recovered Covid-19 cases')
+st.markdown("<br>", unsafe_allow_html=True)
 
-with st.expander(label='Top 5 countries having maximum number of Covid-19 Death Cases') :
-    deaths_by_country = dff.groupby('Country')['Deaths'].sum()
-    desc = deaths_by_country.sort_values(ascending=False)
-    country_list = desc.index[:5]
-    filtered_data = dff[dff['Country'].isin(country_list)]
+# Top 5 countries with maximum number of Covid-19 Death Cases
+st.write('**Top 5 countries with maximum number of Covid-19 Death Cases**')
+st.markdown("<br>", unsafe_allow_html=True)
+deaths_by_country = dff.groupby('Country')['Deaths'].sum()
+desc = deaths_by_country.sort_values(ascending=False)
+country_list = desc.index[:5]
+filtered_data = dff[dff['Country'].isin(country_list)]
 
-    plt.figure(figsize=(12, 8))
-    sns.set_palette("viridis")  # You can choose a different color palette
+plt.figure(figsize=(6,6))
+sns.set_palette("viridis")  # You can choose a different color palette
 
-    for country in country_list:
-        country_data = filtered_data[filtered_data['Country'] == country]
-        sns.barplot(x='Country', y='Deaths', data=country_data, label=country)
+for country in country_list:
+    country_data = filtered_data[filtered_data['Country'] == country]
+    sns.barplot(x='Country', y='Deaths', data=country_data, label=country)
 
-    plt.title('Death Cases of top 5 countries')
-    plt.xlabel('Country')
-    plt.ylabel('Deaths')
-    plt.legend()
-    st.pyplot(plt)
-
+plt.title('Death Cases of top 5 countries')
+plt.xlabel('Country')
+plt.ylabel('Deaths')
+plt.legend()
+plt.tight_layout()
+st.pyplot(plt)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-with st.expander(label='Top 5 countries having the maximum number of Covid-19 Confirmed Cases'):
-    confirmed_by_country = dff.groupby('Country')['Confirmed'].sum()
-    desc = confirmed_by_country.sort_values(ascending=False)
-    country_list = desc.index[:5]
-    filtered_data = dff[dff['Country'].isin(country_list)]
+# Top 5 countries with maximum number of Covid-19 Confirmed Cases
+st.write('**Top 5 countries with maximum number of Covid-19 Confirmed Cases**')
+st.markdown("<br>", unsafe_allow_html=True)
+confirmed_by_country = dff.groupby('Country')['Confirmed'].sum()
+desc = confirmed_by_country.sort_values(ascending=False)
+country_list = desc.index[:5]
+filtered_data = dff[dff['Country'].isin(country_list)]
 
-    plt.figure(figsize=(12, 8))
-    sns.set_palette("magma")  # You can choose a different color palette
+plt.figure(figsize=(6,6))
+sns.set_palette("magma")  # You can choose a different color palette
 
-    for country in country_list:
-        country_data = filtered_data[filtered_data['Country'] == country]
-        sns.barplot(x='Country', y='Confirmed', data=country_data, label=country)
+for country in country_list:
+    country_data = filtered_data[filtered_data['Country'] == country]
+    sns.barplot(x='Country', y='Confirmed', data=country_data, label=country)
 
-    plt.title('Confirmed Cases of top 5 countries')
-    plt.xlabel('Country')
-    plt.ylabel('Confirmed Cases')
-    plt.legend()
-    st.pyplot(plt)
+plt.title('Confirmed Cases of top 5 countries')
+plt.xlabel('Country')
+plt.ylabel('Confirmed Cases')
+plt.legend()
+plt.tight_layout()
+st.pyplot(plt)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-with st.expander(label='Top 5 countries having the maximum number of Covid-19 Recovered Cases'):
-    recovered_by_country = dff.groupby('Country')['Recovered'].sum()
-    desc = recovered_by_country.sort_values(ascending=False)
-    country_list = desc.index[:5]
-    filtered_data = dff[dff['Country'].isin(country_list)]
+# Top 5 countries with maximum number of Covid-19 Recovered Cases
+st.write('**Top 5 countries with maximum number of Covid-19 Recovered Cases**')
+st.markdown("<br>", unsafe_allow_html=True)
+recovered_by_country = dff.groupby('Country')['Recovered'].sum()
+desc = recovered_by_country.sort_values(ascending=False)
+country_list = desc.index[:5]
+filtered_data = dff[dff['Country'].isin(country_list)]
 
-    plt.figure(figsize=(12, 8))
-    sns.set_palette("deep")  # You can choose a different color palette
+plt.figure(figsize=(6,6))
+sns.set_palette("deep")  # You can choose a different color palette
 
-    for country in country_list:
-        country_data = filtered_data[filtered_data['Country'] == country]
-        sns.barplot(x='Country', y='Recovered', data=country_data, label=country)
+for country in country_list:
+    country_data = filtered_data[filtered_data['Country'] == country]
+    sns.barplot(x='Country', y='Recovered', data=country_data, label=country)
 
-    plt.title('Recovered Cases of top 5 countries')
-    plt.xlabel('Country')
-    plt.ylabel('Recovered Cases')
-    plt.legend()
-    st.pyplot(plt)
+plt.title('Recovered Cases of top 5 countries')
+plt.xlabel('Country')
+plt.ylabel('Recovered Cases')
+plt.legend()
+plt.tight_layout()
+st.pyplot(plt)
+
 
 st.markdown("<br>", unsafe_allow_html=True)
 
 st.subheader('Top 10 most affected countries with confirmed cases, recovered cases and death cases')
 
-col1,col2,col3 = st.columns(3)
+deaths_by_country = dff.groupby('Country')['Deaths'].sum()
+desc = deaths_by_country.sort_values(ascending=False)
+country_list = [desc.index[i] for i in range(10)]
+filtered_data = df[df['Country'].isin(country_list)]
+fig=px.pie(filtered_data,values='Deaths',names='Country',title="Percentage of Total Death Cases in 10 most affect countries")
+st.plotly_chart(fig)
 
-with col1 :
-    deaths_by_country = dff.groupby('Country')['Deaths'].sum()
-    desc = deaths_by_country.sort_values(ascending=False)
-    country_list = [desc.index[i] for i in range(10)]
-    filtered_data = df[df['Country'].isin(country_list)]
-    fig=px.pie(filtered_data,values='Deaths',names='Country',title="Percentage of Total Death Cases in 10 most affect countries")
-    st.plotly_chart(fig)
+st.markdown("<br>", unsafe_allow_html=True)
 
-with col2:
-    confirmed_by_country = dff.groupby('Country')['Confirmed'].sum()
-    desc = confirmed_by_country.sort_values(ascending=False)
-    country_list = [desc.index[i] for i in range(10)]
-    filtered_data = df[df['Country'].isin(country_list)]
-    fig=px.pie(filtered_data,values='Confirmed',names='Country',title="Percentage of Total Confirmed Cases in 10 most affect countries")
-    st.plotly_chart(fig)
+confirmed_by_country = dff.groupby('Country')['Confirmed'].sum()
+desc = confirmed_by_country.sort_values(ascending=False)
+country_list = [desc.index[i] for i in range(10)]
+filtered_data = df[df['Country'].isin(country_list)]
+fig=px.pie(filtered_data,values='Confirmed',names='Country',title="Percentage of Total Confirmed Cases in 10 most affect countries")
+st.plotly_chart(fig)
 
-with col3:
-    recovered_by_country = dff.groupby('Country')['Recovered'].sum()
-    desc = recovered_by_country.sort_values(ascending=False)
-    country_list = [desc.index[i] for i in range(10)]
-    filtered_data = df[df['Country'].isin(country_list)]
-    fig=px.pie(filtered_data,values='Recovered',names='Country',title="Percentage of Total Recovered Cases in 10 most affect countries")
-    st.plotly_chart(fig)
+st.markdown("<br>", unsafe_allow_html=True)
+
+recovered_by_country = dff.groupby('Country')['Recovered'].sum()
+desc = recovered_by_country.sort_values(ascending=False)
+country_list = [desc.index[i] for i in range(10)]
+filtered_data = df[df['Country'].isin(country_list)]
+fig=px.pie(filtered_data,values='Recovered',names='Country',title="Percentage of Total Recovered Cases in 10 most affect countries")
+st.plotly_chart(fig)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
