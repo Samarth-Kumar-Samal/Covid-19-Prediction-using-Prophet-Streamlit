@@ -4,6 +4,8 @@ import plotly.express as px
 from prophet.plot import plot_plotly
 from prophet import Prophet
 import streamlit as st
+import warnings
+warnings.filterwarnings('ignore')
 
 # Setting up the page configutation
 st.set_page_config(
@@ -14,6 +16,7 @@ st.set_page_config(
 
 # Setting up the page title
 st.title('Covid-19 Prediction Web Application 📊')
+st.image('covid-19-image.jpg',caption='Covid-19',use_column_width=True)
 st.write('Developing a COVID-19 prediction web app with Prophet for forecasting, Plotly for interactive visualizations, and Streamlit for a user-friendly interface.')
 
 st.markdown("<br>", unsafe_allow_html=True)
