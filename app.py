@@ -1,5 +1,6 @@
 import pandas as pd
 from matplotlib import pyplot as plt
+import seaborn as sns
 import plotly.express as px
 from prophet.plot import plot_plotly
 from prophet import Prophet
@@ -143,61 +144,64 @@ st.subheader('Top 5 countries for Confirmed,Deaths and Recovered Covid-19 cases'
 with st.expander(label='Top 5 countries having maximum number of Covid-19 Death Cases') :
     deaths_by_country = dff.groupby('Country')['Deaths'].sum()
     desc = deaths_by_country.sort_values(ascending=False)
-    country_list = [desc.index[i] for i in range(5)]
+    country_list = desc.index[:5]
     filtered_data = dff[dff['Country'].isin(country_list)]
 
-    fig = px.bar(
-        filtered_data,
-        x="Country",
-        y="Deaths",
-        color="Country",
-        animation_frame="Date",
-        title="Death Cases of top 5 countries",
-        range_y=[0, filtered_data['Deaths'].max() + 100000]
-    )
-    fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 0.5
-    st.plotly_chart(fig)
+    plt.figure(figsize=(12, 8))
+    sns.set_palette("viridis")  # You can choose a different color palette
+
+    for country in country_list:
+        country_data = filtered_data[filtered_data['Country'] == country]
+        sns.barplot(x='Country', y='Deaths', data=country_data, label=country)
+
+    plt.title('Death Cases of top 5 countries')
+    plt.xlabel('Country')
+    plt.ylabel('Deaths')
+    plt.legend()
+    st.pyplot(plt)
 
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-with st.expander(label='Top 5 countries having maximum number of Covid-19 Confirmed Cases') :
+with st.expander(label='Top 5 countries having the maximum number of Covid-19 Confirmed Cases'):
     confirmed_by_country = dff.groupby('Country')['Confirmed'].sum()
     desc = confirmed_by_country.sort_values(ascending=False)
-    country_list = [desc.index[i] for i in range(5)]
+    country_list = desc.index[:5]
     filtered_data = dff[dff['Country'].isin(country_list)]
 
-    fig = px.bar(
-        filtered_data,
-        x="Country",
-        y="Confirmed",
-        color="Country",
-        animation_frame="Date",
-        title="Confirmed Cases of top 5 countries",
-        range_y=[0, filtered_data['Confirmed'].max() + 100000]
-    )
-    fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 0.5
-    st.plotly_chart(fig)
+    plt.figure(figsize=(12, 8))
+    sns.set_palette("magma")  # You can choose a different color palette
+
+    for country in country_list:
+        country_data = filtered_data[filtered_data['Country'] == country]
+        sns.barplot(x='Country', y='Confirmed', data=country_data, label=country)
+
+    plt.title('Confirmed Cases of top 5 countries')
+    plt.xlabel('Country')
+    plt.ylabel('Confirmed Cases')
+    plt.legend()
+    st.pyplot(plt)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-with st.expander(label='Top 5 countries having maximum number of Covid-19 Recovered Cases') :
+with st.expander(label='Top 5 countries having the maximum number of Covid-19 Recovered Cases'):
     recovered_by_country = dff.groupby('Country')['Recovered'].sum()
     desc = recovered_by_country.sort_values(ascending=False)
-    country_list = [desc.index[i] for i in range(5)]
+    country_list = desc.index[:5]
     filtered_data = dff[dff['Country'].isin(country_list)]
 
-    fig = px.bar(
-        filtered_data,
-        x="Country",
-        y="Recovered",
-        color="Country",
-        animation_frame="Date",
-        title="Recovered Cases of top 5 countries",
-        range_y=[0, filtered_data['Confirmed'].max() + 100000]
-    )
-    fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = 0.5
-    st.plotly_chart(fig)
+    plt.figure(figsize=(12, 8))
+    sns.set_palette("deep")  # You can choose a different color palette
+
+    for country in country_list:
+        country_data = filtered_data[filtered_data['Country'] == country]
+        sns.barplot(x='Country', y='Recovered', data=country_data, label=country)
+
+    plt.title('Recovered Cases of top 5 countries')
+    plt.xlabel('Country')
+    plt.ylabel('Recovered Cases')
+    plt.legend()
+    st.pyplot(plt)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -206,7 +210,7 @@ st.subheader('Top 10 most affected countries with confirmed cases, recovered cas
 col1,col2,col3 = st.columns(3)
 
 with col1 :
-    deaths_by_country = df.groupby('Country')['Deaths'].sum()
+    deaths_by_country = dff.groupby('Country')['Deaths'].sum()
     desc = deaths_by_country.sort_values(ascending=False)
     country_list = [desc.index[i] for i in range(10)]
     filtered_data = df[df['Country'].isin(country_list)]
@@ -214,7 +218,7 @@ with col1 :
     st.plotly_chart(fig)
 
 with col2:
-    confirmed_by_country = df.groupby('Country')['Confirmed'].sum()
+    confirmed_by_country = dff.groupby('Country')['Confirmed'].sum()
     desc = confirmed_by_country.sort_values(ascending=False)
     country_list = [desc.index[i] for i in range(10)]
     filtered_data = df[df['Country'].isin(country_list)]
@@ -222,7 +226,7 @@ with col2:
     st.plotly_chart(fig)
 
 with col3:
-    recovered_by_country = df.groupby('Country')['Recovered'].sum()
+    recovered_by_country = dff.groupby('Country')['Recovered'].sum()
     desc = recovered_by_country.sort_values(ascending=False)
     country_list = [desc.index[i] for i in range(10)]
     filtered_data = df[df['Country'].isin(country_list)]
