@@ -19,7 +19,7 @@ st.write('Developing a COVID-19 prediction web app with Prophet for forecasting,
 st.markdown("<br>", unsafe_allow_html=True)
 
 # Data Collection
-df = pd.read_csv('dataset\covid-19.csv')
+df = pd.read_csv(r'dataset\covid-19.csv')
 df.drop(columns=['Unnamed: 0'],inplace=True)
 df['Date'] = pd.to_datetime(df['Date'])
 
